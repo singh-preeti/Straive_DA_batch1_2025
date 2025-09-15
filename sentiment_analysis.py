@@ -3,11 +3,14 @@
 #2. convert the letters into the lowercase
 #3. remove the punctuations like ,.!?
 import string
+from collections import Counter
+
+import matplotlib.pyplot as plt
 
 text = open('sentiment.txt',encoding='utf-8').read()
 lower_case = text.lower()
 cleaned_text = lower_case.translate(str.maketrans('', '', string.punctuation))
-print(cleaned_text)
+#print(cleaned_text)
 
 #Tokenization
 # splitting text into words
@@ -33,3 +36,25 @@ for word in tokenized_words:
         final_words.append(word)
 
 print(final_words)
+
+emotion_list = []
+with open('emotion.txt', 'r') as file:
+    for line in file:
+        cleaned_line = line.replace("\n", '').replace(",", '').replace("'", '').strip()
+        word, emotion = cleaned_line.split(':')
+       # print("word :" + word + " " +"Emotion :" + emotion)
+
+        if word in final_words:
+            emotion_list.append(emotion)
+print(emotion_list)
+w = Counter(emotion_list)
+print(w)
+
+
+# Plotting the emotions on the graph
+
+fig, ax1 = plt.subplots()
+ax1.bar(w.keys(), w.values())
+fig.autofmt_xdate()
+plt.savefig('graph.png')
+plt.show()
